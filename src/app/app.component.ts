@@ -35,6 +35,7 @@ export class AppComponent implements OnInit{
   		this.hideListOfCars();
 	  } else {
 	  	this.showListOfCars();
+	  	this.sort('parking_date');
 	  }
   }
 
@@ -186,6 +187,15 @@ export class AppComponent implements OnInit{
 			}
 		});
 	}
+
+	direction: number;
+  isDesc: boolean = true;
+  column: string = 'parking_date';
+  sort(property){
+    this.isDesc = !this.isDesc; //change the direction    
+    this.column = property;
+    this.direction = this.isDesc ? 1 : -1; 
+  }
 }
 
 

@@ -1,3 +1,26 @@
 .addCursor{
 	cursor: pointer;
 }
+.heading-1{
+  background: darkcyan;
+  color: #fff;
+  letter-spacing: 2px
+}
+.table .thead-dark th {
+	background: #434546;
+  font-weight: 100
+}
+.fontsize-14 {
+	font-size: 14px;
+}
+#parkNewCarModal .modal-content {
+	margin-top: 12%;
+  border-color: darkcyan;
+}
+#parkNewCarModal .modal-header{
+  background: darkcyan;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.1rem;
+  border-radius: 0px;
+}

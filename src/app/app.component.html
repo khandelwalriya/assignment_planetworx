@@ -1,4 +1,4 @@
-<h3 class="text-center mt-3">Automated Parkinglot System</h3>
+<h3 class="text-center heading-1 py-4 mb-4">Automated Parkinglot System</h3>
 
 <form id="pakinglot_creationForm" class="d-none">
   <input type="number" name="noofspaces" class="form-control" [(ngModel)]="N" placeholder="Enter no. of parking slot" min="1">
@@ -34,21 +34,21 @@
     <thead class="thead-dark">
       <tr>
         <th>#</th>
-        <th>Car No</th>
-        <th class="text-center">Color</th>
+        <th (click)="sort('regno')">Car No <i class="fa ml-2 addCursor" [ngClass]="{'fa-sort': column != 'regno','fa-sort-asc': (column == 'regno' && isDesc), 'fa-sort-desc': (column == 'regno' && !isDesc) }"> </i></th>
+        <th class="text-center" (click)="sort('color')">Color <i class="fa ml-2 addCursor" [ngClass]="{'fa-sort': column != 'color','fa-sort-asc': (column == 'color' && isDesc), 'fa-sort-desc': (column == 'color' && !isDesc) }"> </i></th>
         <th class="text-center">Slot No.</th>
-        <th class="text-center">Date Time</th>
+        <th class="text-center" (click)="sort('parking_date')">Date Time <i class="fa ml-2 addCursor" [ngClass]="{'fa-sort': column != 'parking_date','fa-sort-asc': (column == 'parking_date' && isDesc), 'fa-sort-desc': (column == 'parking_date' && !isDesc) }"> </i></th>
         <th></th>
       </tr>
     </thead>
-    <tbody>
-      <tr *ngFor="let item of no_of_parkedcars_details_arr; let i=index;">
+    <tbody class="fontsize-14">
+      <tr *ngFor="let item of no_of_parkedcars_details_arr | sort: {property: column, direction: direction}; let i=index;">
         <td>{{i+1}}</td>
         <td>{{item.regno}}</td>
         <td class="text-center">{{item.color}}</td>
         <td class="text-center">{{item.alloted_slot_no }}</td>
         <td class="text-center">{{item.parking_date | date:'dd MMM y , h:mm a'}}</td>
-        <td class="text-center"><button (click)="removeCarsFromParking(item)" class="addCursor btn btn-warning">Remove</button></td>
+        <td class="text-center"><button (click)="removeCarsFromParking(item)" class="addCursor btn btn-warning fontsize-14">Remove</button></td>
       </tr>
     </tbody>
   </table>
@@ -60,7 +60,7 @@
 
       <!-- Modal Header -->
       <div class="modal-header">
-        <h4 class="modal-title">Car Details</h4>
+        <h5 class="modal-title">Car Details</h5>
         <button type="button" class="close" data-dismiss="modal" (click)="closeModal()">&times;</button>
       </div>
 
@@ -83,7 +83,7 @@
               <p>Available Slot - {{availableSlot()}}</p>
             </div>
             <div class="col-md-12 text-right">
-              <button class=" addCursor my-2" [disabled]="!parkNewCarForm.valid" (click)="allotSlotToCar(parkNewCarForm.value)">Park</button>
+              <button class=" addCursor my-2 btn btn-danger" [disabled]="!parkNewCarForm.valid" (click)="allotSlotToCar(parkNewCarForm.value)">Park</button>
             </div>
           </div>
         </form>
