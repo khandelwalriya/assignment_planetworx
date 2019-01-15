@@ -1,25 +1,43 @@
-<h3 class="text-center">Automated Parkinglot System</h3>
+<h3 class="text-center mt-3">Automated Parkinglot System</h3>
 
 <form id="pakinglot_creationForm" class="d-none">
   <input type="number" name="noofspaces" class="form-control" [(ngModel)]="N" placeholder="Enter no. of parking slot" min="1">
   <input type="number" name="noofcarsinps" [(ngModel)]="m" placeholder="Enter no. of cars currently in the parking lot" min="1" class="form-control" max="{{N}}">
-  <button (click)="createParkingLot()">Create</button>
+  <button (click)="createParkingLot()" class="addCursor">Create</button>
 </form>
 
 
-<div id="listOfCarsParked" class="d-none">
-  <p class="text-right">Total Parking Slots - {{N}}</p>
-
-  <div><button type="button" data-target="#parkNewCarModal" data-toggle="modal">Park a Car</button></div>
-
-  <table class="table">
+<div id="listOfCarsParked" class="d-none container-fluid">
+  <div class="my-3">
+    <div class=" d-inline-block">Total Parking Slots - {{N}}</div>
+    <div class="d-inline-block float-right">
+      <button type="button" data-target="#parkNewCarModal" data-toggle="modal" class="addCursor">Park a Car</button>
+    </div>
+  </div>
+  <div class="my-3">
+    <form [formGroup]="searchForm">
+      <div class="d-inline-block">
+        <input type="text" name="regno" placeholder="Type Registration No." class="form-control" formControlName="regno">
+      </div>
+      <div class="d-inline-block">
+        <select class="form-control" formControlName="color">
+          <option value="">Choose Color</option>
+          <option *ngFor="let color of color_list">{{color}}</option>
+        </select>
+      </div>
+      <div class="d-inline-block">
+        <button (click)="searchFromArray(no_of_parkedcars_details_arr,searchForm.value)">Search</button>
+      </div>
+    </form>
+  </div>
+  <table class="table table-bordered table-hover">
     <thead class="thead-dark">
       <tr>
         <th>#</th>
         <th>Car No</th>
-        <th>Color</th>
-        <th>Slot No.</th>
-        <th>Date Time</th>
+        <th class="text-center">Color</th>
+        <th class="text-center">Slot No.</th>
+        <th class="text-center">Date Time</th>
         <th></th>
       </tr>
     </thead>
@@ -27,10 +45,10 @@
       <tr *ngFor="let item of no_of_parkedcars_details_arr; let i=index;">
         <td>{{i+1}}</td>
         <td>{{item.regno}}</td>
-        <td>{{item.color}}</td>
-        <td>{{item.alloted_slot_no }}</td>
-        <td>{{item.parking_date | date:'dd MMM y , h:mm a'}}</td>
-        <td><button (click)="removeCarsFromParking(item)">Remove</button></td>
+        <td class="text-center">{{item.color}}</td>
+        <td class="text-center">{{item.alloted_slot_no }}</td>
+        <td class="text-center">{{item.parking_date | date:'dd MMM y , h:mm a'}}</td>
+        <td class="text-center"><button (click)="removeCarsFromParking(item)" class="addCursor">Remove</button></td>
       </tr>
     </tbody>
   </table>
@@ -61,8 +79,11 @@
                 <option *ngFor="let opt of color_list" value="{{opt}}">{{opt}}</option>
               </select>
             </div>
+            <div class="col-md-6 mt-4">
+              <p>Available Slot - {{availableSlot()}}</p>
+            </div>
             <div class="col-md-12 text-right">
-              <button class="rk-interalBtnColor addCursor my-2" [disabled]="!parkNewCarForm.valid" (click)="allotSlotToCar(parkNewCarForm.value)">Park</button>
+              <button class=" addCursor my-2" [disabled]="!parkNewCarForm.valid" (click)="allotSlotToCar(parkNewCarForm.value)">Park</button>
             </div>
           </div>
         </form>

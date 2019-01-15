@@ -22,6 +22,10 @@ export class AppComponent implements OnInit{
     parking_date:new FormControl(new Date()),
     alloted_slot_no:new FormControl("")
   })
+  searchForm:FormGroup =  new FormGroup({
+  	regno:new FormControl(""),
+  	color:new FormControl("")
+  })
 
   ngOnInit(){
   	this.N=this.getDataFromSession('total_slots');
@@ -38,6 +42,9 @@ export class AppComponent implements OnInit{
   	if(this.N==null || this.no_of_parkedcars_details_arr==null){
   		this.no_of_parkedcars_details_arr = new Array();
   		this.next_available_slots_arr = new Array();
+  		for(let i=0;i<this.N;i++){
+  			this.next_available_slots_arr.push(i+1);
+  		}
   		this.generateInitialCarDetails();
   	} 
   	this.showListOfCars();
@@ -48,9 +55,25 @@ export class AppComponent implements OnInit{
   		let str = 'KA-'+this.generateRandomNo(2)+'-'+this.generateRandomString(2)+'-'+this.generateRandomNo(4);
   		let color=this.color_list[Math.floor(Math.random()*this.color_list.length)];
   		let obj = new Car(str,color,i+1,new Date());
-  		this.no_of_parkedcars_details_arr.push(obj);
+  		var flag = false;
+			for(let n = 0 ; n < this.no_of_parkedcars_details_arr.length ; n++){
+				if(str===this.no_of_parkedcars_details_arr[n]['regno']){
+					flag=true;
+					i--;
+					break;
+				}
+			}
+			if(flag){
+				continue;
+			} else {
+				var slotno = this.availableSlot();
+				this.no_of_parkedcars_details_arr.push(obj);
+				if(this.next_available_slots_arr.indexOf(slotno) > -1){
+					this.next_available_slots_arr.splice(this.next_available_slots_arr.indexOf(slotno),1)
+				}
+			}
+  		
   	}
-  	this.next_available_slots_arr.push(this.no_of_parkedcars_details_arr.length+1);
   	this.setDataInSession('total_slots',this.N);
   	this.setDataInSession('parkedCarsDetails',this.no_of_parkedcars_details_arr);
   	this.setDataInSession('availableSlots',this.next_available_slots_arr);
@@ -127,11 +150,10 @@ export class AppComponent implements OnInit{
 			if(this.next_available_slots_arr.indexOf(slotno) > -1){
 				this.next_available_slots_arr.splice(this.next_available_slots_arr.indexOf(slotno),1)
 			}
-			this.next_available_slots_arr.push(this.no_of_parkedcars_details_arr.length+1);
 			$('#parkNewCarModal').modal('hide');
-			alert(slotno + 'slot no is alloted');
+			alert( 'slot no '+slotno +' is alloted');
+			this.closeModal();
 		}
-		this.closeModal();
 		this.setDataInSession('parkedCarsDetails',this.no_of_parkedcars_details_arr);
   	this.setDataInSession('availableSlots',this.next_available_slots_arr);
 	}
@@ -147,6 +169,13 @@ export class AppComponent implements OnInit{
 	closeModal(){
 		this.parkNewCarForm.reset();
   	this.parkNewCarForm.controls['color'].setValue("");
+	}
+
+	searchFromArray(arr,formObj){
+		console.log(formObj);
+		arr.map((obj)=>{
+			console.log(obj);
+		})
 	}
 }
 
