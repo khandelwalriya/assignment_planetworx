@@ -1,6 +1,9 @@
 .addCursor{
 	cursor: pointer;
 }
+.cursor-disable{
+	cursor: not-allowed;
+}
 .heading-1{
   background: darkcyan;
   color: #fff;

@@ -83,7 +83,7 @@
               <p>Available Slot - {{availableSlot()}}</p>
             </div>
             <div class="col-md-12 text-right">
-              <button class=" addCursor my-2 btn btn-danger" [disabled]="!parkNewCarForm.valid" (click)="allotSlotToCar(parkNewCarForm.value)">Park</button>
+              <button class=" addCursor my-2 btn btn-danger" [disabled]="!parkNewCarForm.valid" (click)="allotSlotToCar(parkNewCarForm.value)" [ngClass]="{'cursor-disable':!parkNewCarForm.valid}">Park</button>
             </div>
           </div>
         </form>
