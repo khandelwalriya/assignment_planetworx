@@ -173,9 +173,18 @@ export class AppComponent implements OnInit{
 
 	searchFromArray(arr,formObj){
 		console.log(formObj);
-		arr.map((obj)=>{
+		this.no_of_parkedcars_details_arr = arr.filter((obj)=>{
 			console.log(obj);
-		})
+			if(formObj.color=="" && formObj.regno == ""){
+				return arr;
+			} else if(formObj.color=="" && formObj.regno != ""){
+				return obj.regno.toLowerCase().includes(formObj.regno.trim().toLowerCase());
+			} else if(formObj.color!="" && formObj.regno == ""){
+				return obj.color.includes(formObj.color);
+			} else {
+				return (obj.color.includes(formObj.color) && obj.regno.toLowerCase().includes(formObj.regno.trim().toLowerCase()));
+			}
+		});
 	}
 }
 

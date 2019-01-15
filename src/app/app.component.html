@@ -11,22 +11,22 @@
   <div class="my-3">
     <div class=" d-inline-block">Total Parking Slots - {{N}}</div>
     <div class="d-inline-block float-right">
-      <button type="button" data-target="#parkNewCarModal" data-toggle="modal" class="addCursor">Park a Car</button>
+      <button type="button" data-target="#parkNewCarModal" data-toggle="modal" class="addCursor btn btn-danger">Park a Car</button>
     </div>
   </div>
-  <div class="my-3">
+  <div class="mt-5 mb-3 text-right">
     <form [formGroup]="searchForm">
       <div class="d-inline-block">
         <input type="text" name="regno" placeholder="Type Registration No." class="form-control" formControlName="regno">
       </div>
-      <div class="d-inline-block">
+      <div class="d-inline-block ml-2">
         <select class="form-control" formControlName="color">
           <option value="">Choose Color</option>
           <option *ngFor="let color of color_list">{{color}}</option>
         </select>
       </div>
-      <div class="d-inline-block">
-        <button (click)="searchFromArray(no_of_parkedcars_details_arr,searchForm.value)">Search</button>
+      <div class="d-inline-block ml-2">
+        <button (click)="searchFromArray(getDataFromSession('parkedCarsDetails'),searchForm.value)" class="btn btn-info">Search</button>
       </div>
     </form>
   </div>
@@ -48,7 +48,7 @@
         <td class="text-center">{{item.color}}</td>
         <td class="text-center">{{item.alloted_slot_no }}</td>
         <td class="text-center">{{item.parking_date | date:'dd MMM y , h:mm a'}}</td>
-        <td class="text-center"><button (click)="removeCarsFromParking(item)" class="addCursor">Remove</button></td>
+        <td class="text-center"><button (click)="removeCarsFromParking(item)" class="addCursor btn btn-warning">Remove</button></td>
       </tr>
     </tbody>
   </table>
