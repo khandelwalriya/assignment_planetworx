@@ -1,27 +1,69 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Car } from './Car';
+import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+declare var $:any;
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+
+export class AppComponent implements OnInit{
 
   N;
   m;
-  no_of_parkingspace_arr;
-  next_available_slot;
+  no_of_parkedcars_details_arr;
+  next_available_slots_arr;
   color_list = ['White','Blue','Black','Red'];
+  parkNewCarForm:FormGroup = new FormGroup({
+    regno: new FormControl("",Validators.required),
+    color:new FormControl("",Validators.required),
+    parking_date:new FormControl(new Date()),
+    alloted_slot_no:new FormControl("")
+  })
+
+  ngOnInit(){
+  	this.N=this.getDataFromSession('total_slots');
+  	this.no_of_parkedcars_details_arr = this.getDataFromSession('parkedCarsDetails');
+  	this.next_available_slots_arr = this.getDataFromSession('availableSlots');
+  	if(this.N==null || this.no_of_parkedcars_details_arr==null) {
+  		this.hideListOfCars();
+	  } else {
+	  	this.showListOfCars();
+	  }
+  }
+
   createParkingLot(){
-  	this.no_of_parkingspace_arr = new Array();
+  	if(this.N==null || this.no_of_parkedcars_details_arr==null){
+  		this.no_of_parkedcars_details_arr = new Array();
+  		this.next_available_slots_arr = new Array();
+  		this.generateInitialCarDetails();
+  	} 
+  	this.showListOfCars();
+  }
+
+  generateInitialCarDetails(){
   	for(let i=0; i<this.m; i++){
   		let str = 'KA-'+this.generateRandomNo(2)+'-'+this.generateRandomString(2)+'-'+this.generateRandomNo(4);
   		let color=this.color_list[Math.floor(Math.random()*this.color_list.length)];
-  		let obj = new Car(str,color,i);
-  		this.no_of_parkingspace_arr.push(obj);
-  		console.log(this.no_of_parkingspace_arr);
+  		let obj = new Car(str,color,i+1,new Date());
+  		this.no_of_parkedcars_details_arr.push(obj);
   	}
+  	this.next_available_slots_arr.push(this.no_of_parkedcars_details_arr.length+1);
+  	this.setDataInSession('total_slots',this.N);
+  	this.setDataInSession('parkedCarsDetails',this.no_of_parkedcars_details_arr);
+  	this.setDataInSession('availableSlots',this.next_available_slots_arr);
+  }
+
+  showListOfCars(){
+  	document.getElementById('pakinglot_creationForm').classList.add('d-none');
+  	document.getElementById('listOfCarsParked').classList.remove('d-none');
+  }
+
+  hideListOfCars(){
+  	document.getElementById('pakinglot_creationForm').classList.remove('d-none');
+  	document.getElementById('listOfCarsParked').classList.add('d-none');
   }
 
   generateRandomNo(digit_len){
@@ -41,8 +83,70 @@ export class AppComponent {
 		return text;
 	}
 
-	checkUniqueRegNo(){
+	setDataInSession(id,value){
+		if(typeof value == 'object')
+			value = JSON.stringify(value);
+		sessionStorage.setItem(id,value);
+	}
 
+	getDataFromSession(id){
+		var value = sessionStorage.getItem(id);
+		try {
+			return JSON.parse(value);
+		} catch {
+			return value;
+		}
+	}
+
+	removeCarsFromParking(car){
+		for (let n = 0 ; n < this.no_of_parkedcars_details_arr.length ; n++) {
+	    if (this.no_of_parkedcars_details_arr[n].regno == car.regno) {
+	    	this.next_available_slots_arr.push(car.alloted_slot_no);
+	      var removedObject = this.no_of_parkedcars_details_arr.splice(n,1);
+	      removedObject = null;
+	      break;
+		  }
+		}
+		this.setDataInSession('parkedCarsDetails',this.no_of_parkedcars_details_arr);
+  	this.setDataInSession('availableSlots',this.next_available_slots_arr);
+	}
+
+	allotSlotToCar(formvals){
+		var flag = false;
+		for(let n = 0 ; n < this.no_of_parkedcars_details_arr.length ; n++){
+			if(formvals['regno']===this.no_of_parkedcars_details_arr[n]['regno']){
+				alert('Car no is already registered');
+				flag=true;
+				break;
+			}
+		}
+		if(!flag){
+			var slotno = this.availableSlot();
+			let obj = new Car(formvals['regno'],formvals['color'],slotno,new Date());
+			this.no_of_parkedcars_details_arr.push(obj);
+			if(this.next_available_slots_arr.indexOf(slotno) > -1){
+				this.next_available_slots_arr.splice(this.next_available_slots_arr.indexOf(slotno),1)
+			}
+			this.next_available_slots_arr.push(this.no_of_parkedcars_details_arr.length+1);
+			$('#parkNewCarModal').modal('hide');
+			alert(slotno + 'slot no is alloted');
+		}
+		this.closeModal();
+		this.setDataInSession('parkedCarsDetails',this.no_of_parkedcars_details_arr);
+  	this.setDataInSession('availableSlots',this.next_available_slots_arr);
+	}
+
+	availableSlot(){
+		return Math.min(...this.next_available_slots_arr);
+	}
+
+	checkCarNo(form){
+		
+	}
+
+	closeModal(){
+		this.parkNewCarForm.reset();
+  	this.parkNewCarForm.controls['color'].setValue("");
 	}
 }
 

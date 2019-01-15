@@ -1,26 +1,73 @@
-<form>
+<h3 class="text-center">Automated Parkinglot System</h3>
+
+<form id="pakinglot_creationForm" class="d-none">
   <input type="number" name="noofspaces" class="form-control" [(ngModel)]="N" placeholder="Enter no. of parking slot" min="1">
   <input type="number" name="noofcarsinps" [(ngModel)]="m" placeholder="Enter no. of cars currently in the parking lot" min="1" class="form-control" max="{{N}}">
   <button (click)="createParkingLot()">Create</button>
 </form>
 
-<table>
-  <thead>
-    <tr>
-      <th>#</th>
-      <th>Car No</th>
-      <th>Color</th>
-      <th>Slot No.</th>
-      <th>Date Time</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let item of no_of_parkingspace_arr; let i=index;">
-      <td>{{i+1}}</td>
-      <td>{{item.regno}}</td>
-      <td>{{item.color}}</td>
-      <td>{{item.alloted_slot_no}}</td>
-      <td>26 Jan 2019</td>
-    </tr>
-  </tbody>
-</table>
+
+<div id="listOfCarsParked" class="d-none">
+  <p class="text-right">Total Parking Slots - {{N}}</p>
+
+  <div><button type="button" data-target="#parkNewCarModal" data-toggle="modal">Park a Car</button></div>
+
+  <table class="table">
+    <thead class="thead-dark">
+      <tr>
+        <th>#</th>
+        <th>Car No</th>
+        <th>Color</th>
+        <th>Slot No.</th>
+        <th>Date Time</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of no_of_parkedcars_details_arr; let i=index;">
+        <td>{{i+1}}</td>
+        <td>{{item.regno}}</td>
+        <td>{{item.color}}</td>
+        <td>{{item.alloted_slot_no }}</td>
+        <td>{{item.parking_date | date:'dd MMM y , h:mm a'}}</td>
+        <td><button (click)="removeCarsFromParking(item)">Remove</button></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="modal" id="parkNewCarModal" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Car Details</h4>
+        <button type="button" class="close" data-dismiss="modal" (click)="closeModal()">&times;</button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        <form [formGroup]="parkNewCarForm">
+          <div class="row">
+            <div class="col-md-6">
+              <label>Car No. <span class="text-danger">*</span></label>
+              <input type="text" name="" class="form-control" formControlName="regno">
+            </div>
+            <div class="col-md-6">
+              <label>Color <span class="text-danger">*</span></label>
+              <select formControlName="color" class="form-control">
+                <option value="">Choose Color</option>
+                <option *ngFor="let opt of color_list" value="{{opt}}">{{opt}}</option>
+              </select>
+            </div>
+            <div class="col-md-12 text-right">
+              <button class="rk-interalBtnColor addCursor my-2" [disabled]="!parkNewCarForm.valid" (click)="allotSlotToCar(parkNewCarForm.value)">Park</button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
