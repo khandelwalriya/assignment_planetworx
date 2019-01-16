@@ -20,8 +20,22 @@ export class SortPipe implements PipeTransform {
             }
         
         });
+      } else if(args.property=='alloted_slot_no'){
+          return value.sort(function(a, b){
+              if(a[args.property] !=undefined && b[args.property] != undefined) {
+                  if(a[args.property] < b[args.property]){
+                      return -1 * args.direction;
+                  }
+                  else if( a[args.property] > b[args.property]){
+                      return 1 * args.direction;
+                  }
+                  else{
+                      return 0;
+                  }
+              }
+          });
       } else {
-      	return value.sort(function(a, b){
+      	  return value.sort(function(a, b){
       	    if(a[args.property] !=undefined && b[args.property] != undefined) {
       	        if(a[args.property].toLowerCase() < b[args.property].toLowerCase()){
       	            return -1 * args.direction;

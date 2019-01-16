@@ -188,7 +188,7 @@ export class AppComponent implements OnInit, OnDestroy{
 				return arr;
 			} else if(formObj.color=="" && formObj.regno != ""){
 				return obj.regno.toLowerCase().includes(formObj.regno.trim().toLowerCase());
-			} else if(formObj.color!="" && formObj.regno == ""){
+			} else if(formObj.color!="" && (formObj.regno == "" || formObj.regno==null)){
 				return obj.color.includes(formObj.color);
 			} else {
 				return (obj.color.includes(formObj.color) && obj.regno.toLowerCase().includes(formObj.regno.trim().toLowerCase()));
@@ -211,8 +211,24 @@ export class AppComponent implements OnInit, OnDestroy{
   		 document.getElementById(""+str).focus();
   	}
   }
+  resetSearch(){
+  	this.searchForm.reset();
+  	this.searchForm.controls['color'].setValue("");
+  	this.no_of_parkedcars_details_arr = this.getDataFromSession('parkedCarsDetails');
+  }
   ngOnDestroy(){
   	sessionStorage.clear();
+  }
+
+  validateForm(){
+  	const invalid = [];
+    const controls = this.parkNewCarForm.controls;
+    for (const name in controls) {
+        if (name!='color' && controls[name].invalid) {
+            invalid.push(name);
+        }
+    }
+    return invalid;
   }
 }
 

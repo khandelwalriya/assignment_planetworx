@@ -19,7 +19,10 @@
 
 <div id="listOfCarsParked" class="d-none container-fluid">
   <div class="my-3">
-    <div class=" d-inline-block">Total Parking Slots - {{N}}</div>
+    <div class=" d-inline-block">
+      <p class="mb-1">Total Parking Slots - <span class="text-danger">{{N}}</span></p>
+      <p class="mb-0">Available Parking Slots - <span class="text-danger">{{next_available_slots_arr.length}}</span></p>
+    </div>
     <div class="d-inline-block float-right">
       <button type="button" data-target="#parkNewCarModal" data-toggle="modal" class="addCursor btn btn-danger fontsize-14">Park a Car</button>
     </div>
@@ -38,16 +41,22 @@
       <div class="d-inline-block ml-2">
         <button (click)="searchFromArray(getDataFromSession('parkedCarsDetails'),searchForm.value)" class="btn btn-info fontsize-14">Search</button>
       </div>
+      <div class="d-inline-block ml-2">
+        <button (click)="resetSearch()" class="btn btn-secondary fontsize-14">Reset</button>
+      </div>
     </form>
   </div>
-  <div class="table-responsive">
+  <h5 *ngIf="no_of_parkedcars_details_arr && no_of_parkedcars_details_arr.length ==0" class="text-center text-capitalize">
+    No Cars Parked
+  </h5>
+  <div class="table-responsive" *ngIf="no_of_parkedcars_details_arr && no_of_parkedcars_details_arr.length >0">
     <table class="table table-bordered table-hover ">
       <thead class="thead-dark">
         <tr>
           <th>#</th>
           <th (click)="sort('regno')">Car No <i class="fa ml-2 addCursor" [ngClass]="{'fa-sort': column != 'regno','fa-sort-asc': (column == 'regno' && isDesc), 'fa-sort-desc': (column == 'regno' && !isDesc) }"> </i></th>
           <th class="text-center" (click)="sort('color')">Color <i class="fa ml-2 addCursor" [ngClass]="{'fa-sort': column != 'color','fa-sort-asc': (column == 'color' && isDesc), 'fa-sort-desc': (column == 'color' && !isDesc) }"> </i></th>
-          <th class="text-center">Slot No.</th>
+          <th class="text-center" (click)="sort('alloted_slot_no')">Slot No.<i class="fa ml-2 addCursor" [ngClass]="{'fa-sort': column != 'alloted_slot_no','fa-sort-asc': (column == 'alloted_slot_no' && isDesc), 'fa-sort-desc': (column == 'alloted_slot_no' && !isDesc) }"> </i></th>
           <th class="text-center" (click)="sort('parking_date')">Date Time <i class="fa ml-2 addCursor" [ngClass]="{'fa-sort': column != 'parking_date','fa-sort-asc': (column == 'parking_date' && isDesc), 'fa-sort-desc': (column == 'parking_date' && !isDesc) }"> </i></th>
           <th></th>
         </tr>
@@ -97,6 +106,14 @@
             </div>
             <div class="col-md-6 mt-4">
               <p>Available Slot - {{availableSlot()}}</p>
+            </div>
+            <div class="col-md-12">
+              <span class="text-danger fontsize-14" *ngIf="validateForm().length>0"> Registration No should be in proper format. 
+                <span *ngIf=" (validateForm().includes('regnostr1'))">First block will have 2 characters only. </span>
+                <span *ngIf=" (validateForm().includes('regnostr2'))">Second block will have 2 digits only. </span>
+                <span *ngIf=" (validateForm().includes('regnostr3'))">Third block will have 2 characters only. </span>
+                <span *ngIf=" (validateForm().includes('regnostr4'))">Fourth block will have 4 digits only.</span>
+              </span>
             </div>
             <div class="col-md-12 text-right">
               <button class=" addCursor my-2 btn btn-danger" [disabled]="!parkNewCarForm.valid" (click)="allotSlotToCar(parkNewCarForm.value)" [ngClass]="{'cursor-disable':!parkNewCarForm.valid}">Park</button>
