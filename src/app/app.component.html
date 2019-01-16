@@ -69,8 +69,12 @@
         <form [formGroup]="parkNewCarForm">
           <div class="row">
             <div class="col-md-6">
-              <label>Car No. <span class="text-danger">*</span></label>
-              <input type="text" name="" class="form-control" formControlName="regno">
+              <label>Car No. <span class="text-danger">*</span></label><br>
+              <input type="text" name="" class="form-control text-uppercase d-inline-block col-2" formControlName="regnostr1"> -
+              <input type="text" name="" class="form-control text-uppercase d-inline-block col-2" formControlName="regnostr2"> -
+              <input type="text" name="" class="form-control text-uppercase d-inline-block col-2" formControlName="regnostr3"> -
+              <input type="text" name="" class="form-control text-uppercase d-inline-block col-3" formControlName="regnostr4"> 
+              <p class="text-danger mt-2 fontsize-14">(Eg. KA-01-HH-1234 or KA-04-TY-3469 )</p>
             </div>
             <div class="col-md-6">
               <label>Color <span class="text-danger">*</span></label>

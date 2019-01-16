@@ -17,10 +17,14 @@ export class AppComponent implements OnInit{
   next_available_slots_arr;
   color_list = ['White','Blue','Black','Red'];
   parkNewCarForm:FormGroup = new FormGroup({
-    regno: new FormControl("",Validators.required),
+    regno: new FormControl(""),
     color:new FormControl("",Validators.required),
     parking_date:new FormControl(new Date()),
-    alloted_slot_no:new FormControl("")
+    alloted_slot_no:new FormControl(""),
+    regnostr1 :new FormControl("",[Validators.required,Validators.maxLength(2),Validators.minLength(2)]),
+    regnostr2 :new FormControl("",[Validators.required,Validators.maxLength(2),Validators.minLength(2),Validators.pattern("^[0-9]{2}$")]),
+    regnostr3 :new FormControl("",[Validators.required,Validators.maxLength(2),Validators.minLength(2)]),
+    regnostr4 :new FormControl("",[Validators.required,,Validators.maxLength(4),Validators.minLength(4)])
   })
   searchForm:FormGroup =  new FormGroup({
   	regno:new FormControl(""),
@@ -137,6 +141,7 @@ export class AppComponent implements OnInit{
 
 	allotSlotToCar(formvals){
 		var flag = false;
+		formvals['regno']= formvals['regnostr1']+'-'+formvals['regnostr2']+'-'+formvals['regnostr3']+'-'+formvals['regnostr4'];
 		for(let n = 0 ; n < this.no_of_parkedcars_details_arr.length ; n++){
 			if(formvals['regno']===this.no_of_parkedcars_details_arr[n]['regno']){
 				alert('Car no is already registered');
@@ -161,10 +166,6 @@ export class AppComponent implements OnInit{
 
 	availableSlot(){
 		return Math.min(...this.next_available_slots_arr);
-	}
-
-	checkCarNo(form){
-		
 	}
 
 	closeModal(){
