@@ -40,28 +40,30 @@
       </div>
     </form>
   </div>
-  <table class="table table-bordered table-hover table-responsive">
-    <thead class="thead-dark">
-      <tr>
-        <th>#</th>
-        <th (click)="sort('regno')">Car No <i class="fa ml-2 addCursor" [ngClass]="{'fa-sort': column != 'regno','fa-sort-asc': (column == 'regno' && isDesc), 'fa-sort-desc': (column == 'regno' && !isDesc) }"> </i></th>
-        <th class="text-center" (click)="sort('color')">Color <i class="fa ml-2 addCursor" [ngClass]="{'fa-sort': column != 'color','fa-sort-asc': (column == 'color' && isDesc), 'fa-sort-desc': (column == 'color' && !isDesc) }"> </i></th>
-        <th class="text-center">Slot No.</th>
-        <th class="text-center" (click)="sort('parking_date')">Date Time <i class="fa ml-2 addCursor" [ngClass]="{'fa-sort': column != 'parking_date','fa-sort-asc': (column == 'parking_date' && isDesc), 'fa-sort-desc': (column == 'parking_date' && !isDesc) }"> </i></th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody class="fontsize-14">
-      <tr *ngFor="let item of no_of_parkedcars_details_arr | sort: {property: column, direction: direction}; let i=index;">
-        <td>{{i+1}}</td>
-        <td class="text-uppercase">{{item.regno}}</td>
-        <td class="text-center">{{item.color}}</td>
-        <td class="text-center">{{item.alloted_slot_no }}</td>
-        <td class="text-center">{{item.parking_date | date:'dd MMM y , h:mm a'}}</td>
-        <td class="text-center"><button (click)="removeCarsFromParking(item)" class="addCursor btn btn-warning fontsize-14">Remove</button></td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover ">
+      <thead class="thead-dark">
+        <tr>
+          <th>#</th>
+          <th (click)="sort('regno')">Car No <i class="fa ml-2 addCursor" [ngClass]="{'fa-sort': column != 'regno','fa-sort-asc': (column == 'regno' && isDesc), 'fa-sort-desc': (column == 'regno' && !isDesc) }"> </i></th>
+          <th class="text-center" (click)="sort('color')">Color <i class="fa ml-2 addCursor" [ngClass]="{'fa-sort': column != 'color','fa-sort-asc': (column == 'color' && isDesc), 'fa-sort-desc': (column == 'color' && !isDesc) }"> </i></th>
+          <th class="text-center">Slot No.</th>
+          <th class="text-center" (click)="sort('parking_date')">Date Time <i class="fa ml-2 addCursor" [ngClass]="{'fa-sort': column != 'parking_date','fa-sort-asc': (column == 'parking_date' && isDesc), 'fa-sort-desc': (column == 'parking_date' && !isDesc) }"> </i></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody class="fontsize-14">
+        <tr *ngFor="let item of no_of_parkedcars_details_arr | sort: {property: column, direction: direction}; let i=index;">
+          <td>{{i+1}}</td>
+          <td class="text-uppercase">{{item.regno}}</td>
+          <td class="text-center">{{item.color}}</td>
+          <td class="text-center">{{item.alloted_slot_no }}</td>
+          <td class="text-center">{{item.parking_date | date:'dd MMM y , h:mm a'}}</td>
+          <td class="text-center"><button (click)="removeCarsFromParking(item)" class="addCursor btn btn-warning fontsize-14">Remove</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
 
 <div class="modal" id="parkNewCarModal" data-keyboard="false" data-backdrop="static">
