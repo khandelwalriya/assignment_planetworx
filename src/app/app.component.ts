@@ -32,6 +32,10 @@ export class AppComponent implements OnInit, OnDestroy{
   })
 
   ngOnInit(){
+  	this.initializeVariables();
+  }
+
+  initializeVariables(){
   	this.N = (this.getDataFromSession('sessionDataJson'))?this.getDataFromSession('sessionDataJson')['total_slots']:null;
   	this.no_of_parkedcars_details_arr = (this.getDataFromSession('sessionDataJson'))?this.getDataFromSession('sessionDataJson')['parkedCarsDetails']:null;
   	this.next_available_slots_arr = (this.getDataFromSession('sessionDataJson'))?this.getDataFromSession('sessionDataJson')['availableSlots']:null;
