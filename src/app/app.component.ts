@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Car } from './Car';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 declare var $:any;
@@ -9,10 +9,10 @@ declare var $:any;
   styleUrls: ['./app.component.css']
 })
 
-export class AppComponent implements OnInit{
+export class AppComponent implements OnInit, OnDestroy{
 
   N;
-  m;
+  m=0;
   no_of_parkedcars_details_arr;
   next_available_slots_arr;
   color_list = ['White','Blue','Black','Red'];
@@ -77,8 +77,8 @@ export class AppComponent implements OnInit{
 					this.next_available_slots_arr.splice(this.next_available_slots_arr.indexOf(slotno),1)
 				}
 			}
-  		
   	}
+
   	this.setDataInSession('total_slots',this.N);
   	this.setDataInSession('parkedCarsDetails',this.no_of_parkedcars_details_arr);
   	this.setDataInSession('availableSlots',this.next_available_slots_arr);
@@ -151,21 +151,26 @@ export class AppComponent implements OnInit{
 		}
 		if(!flag){
 			var slotno = this.availableSlot();
-			let obj = new Car(formvals['regno'],formvals['color'],slotno,new Date());
-			this.no_of_parkedcars_details_arr.push(obj);
-			if(this.next_available_slots_arr.indexOf(slotno) > -1){
-				this.next_available_slots_arr.splice(this.next_available_slots_arr.indexOf(slotno),1)
+			if(slotno!=0){
+				let obj = new Car(formvals['regno'],formvals['color'],slotno,new Date());
+				this.no_of_parkedcars_details_arr.push(obj);
+				if(this.next_available_slots_arr.indexOf(slotno) > -1){
+					this.next_available_slots_arr.splice(this.next_available_slots_arr.indexOf(slotno),1)
+				}
+				$('#parkNewCarModal').modal('hide');
+				alert( 'slot no '+slotno +' is alloted');
+				this.closeModal();
 			}
-			$('#parkNewCarModal').modal('hide');
-			alert( 'slot no '+slotno +' is alloted');
-			this.closeModal();
 		}
 		this.setDataInSession('parkedCarsDetails',this.no_of_parkedcars_details_arr);
   	this.setDataInSession('availableSlots',this.next_available_slots_arr);
 	}
 
 	availableSlot(){
-		return Math.min(...this.next_available_slots_arr);
+		if(this.no_of_parkedcars_details_arr.length == this.N){
+			return 0;
+		}
+		return (this.next_available_slots_arr && this.next_available_slots_arr.length>0)?Math.min(...this.next_available_slots_arr):1;
 	}
 
 	closeModal(){
@@ -174,9 +179,7 @@ export class AppComponent implements OnInit{
 	}
 
 	searchFromArray(arr,formObj){
-		console.log(formObj);
 		this.no_of_parkedcars_details_arr = arr.filter((obj)=>{
-			console.log(obj);
 			if(formObj.color=="" && formObj.regno == ""){
 				return arr;
 			} else if(formObj.color=="" && formObj.regno != ""){
@@ -199,11 +202,13 @@ export class AppComponent implements OnInit{
   }
 
   checkTextAndPassKey(elem){
-  	console.log(elem);
   	if(elem.target.value.length>=elem.target.maxLength){
   		var str =parseInt(elem.target.id) + 1;
   		 document.getElementById(""+str).focus();
   	}
+  }
+  ngOnDestroy(){
+  	sessionStorage.clear();
   }
 }
 

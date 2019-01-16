@@ -1,10 +1,20 @@
 <h3 class="text-center heading-1 py-4 mb-4">Automated Parkinglot System</h3>
 
-<form id="pakinglot_creationForm" class="d-none">
-  <input type="number" name="noofspaces" class="form-control" [(ngModel)]="N" placeholder="Enter no. of parking slot" min="1">
-  <input type="number" name="noofcarsinps" [(ngModel)]="m" placeholder="Enter no. of cars currently in the parking lot" min="1" class="form-control" max="{{N}}">
-  <button (click)="createParkingLot()" class="addCursor">Create</button>
-</form>
+<div class=" container  mt-5">
+  <form id="pakinglot_creationForm" class="d-none">
+    <div class="col-4 d-inline-block">
+      <label>Enter no. of parking slot<span class="text-danger">*</span></label><br>
+      <input type="number" name="noofspaces" class="form-control" [(ngModel)]="N" placeholder="Enter no. of parking slot" min="1" required>
+    </div>
+    <div class="col-4 d-inline-block">
+      <label>Enter no. of cars currently in the parking lot<span class="text-danger">*</span></label><br>
+      <input type="number" name="noofcarsinps" [(ngModel)]="m" placeholder="Enter no. of cars currently in the parking lot" min="0" class="form-control " max="{{N}}" required>
+    </div>
+    <div class="col-2 d-inline-block">
+      <button (click)="createParkingLot()" class="addCursor btn btn-danger" [disabled]="(this.N=='' || this.N==null || this.m <0 || this.N <0)">Create</button>
+    </div>
+  </form>
+</div>
 
 
 <div id="listOfCarsParked" class="d-none container-fluid">
@@ -66,7 +76,7 @@
 
       <!-- Modal body -->
       <div class="modal-body">
-        <form [formGroup]="parkNewCarForm">
+        <form [formGroup]="parkNewCarForm" *ngIf="availableSlot()!=0">
           <div class="row">
             <div class="col-md-6">
               <label>Car No. <span class="text-danger">*</span></label><br>
@@ -91,6 +101,7 @@
             </div>
           </div>
         </form>
+        <p *ngIf="availableSlot()==0" class="text-center">No Parking Available</p>
       </div>
 
     </div>
