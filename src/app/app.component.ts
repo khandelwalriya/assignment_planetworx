@@ -22,7 +22,7 @@ export class AppComponent implements OnInit{
     parking_date:new FormControl(new Date()),
     alloted_slot_no:new FormControl(""),
     regnostr1 :new FormControl("",[Validators.required,Validators.maxLength(2),Validators.minLength(2)]),
-    regnostr2 :new FormControl("",[Validators.required,Validators.maxLength(2),Validators.minLength(2),Validators.pattern("^[0-9]{2}$")]),
+    regnostr2 :new FormControl("",[Validators.required,Validators.maxLength(2),Validators.minLength(2)]),
     regnostr3 :new FormControl("",[Validators.required,Validators.maxLength(2),Validators.minLength(2)]),
     regnostr4 :new FormControl("",[Validators.required,,Validators.maxLength(4),Validators.minLength(4)])
   })
@@ -196,6 +196,14 @@ export class AppComponent implements OnInit{
     this.isDesc = !this.isDesc; //change the direction    
     this.column = property;
     this.direction = this.isDesc ? 1 : -1; 
+  }
+
+  checkTextAndPassKey(elem){
+  	console.log(elem);
+  	if(elem.target.value.length>=elem.target.maxLength){
+  		var str =parseInt(elem.target.id) + 1;
+  		 document.getElementById(""+str).focus();
+  	}
   }
 }
 

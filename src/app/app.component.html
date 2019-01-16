@@ -11,22 +11,22 @@
   <div class="my-3">
     <div class=" d-inline-block">Total Parking Slots - {{N}}</div>
     <div class="d-inline-block float-right">
-      <button type="button" data-target="#parkNewCarModal" data-toggle="modal" class="addCursor btn btn-danger">Park a Car</button>
+      <button type="button" data-target="#parkNewCarModal" data-toggle="modal" class="addCursor btn btn-danger fontsize-14">Park a Car</button>
     </div>
   </div>
   <div class="mt-5 mb-3 text-right">
     <form [formGroup]="searchForm">
       <div class="d-inline-block">
-        <input type="text" name="regno" placeholder="Type Registration No." class="form-control" formControlName="regno">
+        <input type="text" name="regno" placeholder="Type Reg No." class="form-control text-uppercase fontsize-14" formControlName="regno">
       </div>
       <div class="d-inline-block ml-2">
-        <select class="form-control" formControlName="color">
+        <select class="form-control fontsize-14" formControlName="color">
           <option value="">Choose Color</option>
           <option *ngFor="let color of color_list">{{color}}</option>
         </select>
       </div>
       <div class="d-inline-block ml-2">
-        <button (click)="searchFromArray(getDataFromSession('parkedCarsDetails'),searchForm.value)" class="btn btn-info">Search</button>
+        <button (click)="searchFromArray(getDataFromSession('parkedCarsDetails'),searchForm.value)" class="btn btn-info fontsize-14">Search</button>
       </div>
     </form>
   </div>
@@ -44,7 +44,7 @@
     <tbody class="fontsize-14">
       <tr *ngFor="let item of no_of_parkedcars_details_arr | sort: {property: column, direction: direction}; let i=index;">
         <td>{{i+1}}</td>
-        <td>{{item.regno}}</td>
+        <td class="text-uppercase">{{item.regno}}</td>
         <td class="text-center">{{item.color}}</td>
         <td class="text-center">{{item.alloted_slot_no }}</td>
         <td class="text-center">{{item.parking_date | date:'dd MMM y , h:mm a'}}</td>
@@ -70,15 +70,15 @@
           <div class="row">
             <div class="col-md-6">
               <label>Car No. <span class="text-danger">*</span></label><br>
-              <input type="text" name="" class="form-control text-uppercase d-inline-block col-2" formControlName="regnostr1"> -
-              <input type="text" name="" class="form-control text-uppercase d-inline-block col-2" formControlName="regnostr2"> -
-              <input type="text" name="" class="form-control text-uppercase d-inline-block col-2" formControlName="regnostr3"> -
-              <input type="text" name="" class="form-control text-uppercase d-inline-block col-3" formControlName="regnostr4"> 
+              <input type="text" id="1" name="" class="form-control text-uppercase d-inline-block col-2" formControlName="regnostr1" (keyup)="checkTextAndPassKey($event)" maxlength="2"> -
+              <input type="text" id="2" name="" class="form-control text-uppercase d-inline-block col-2" formControlName="regnostr2" (keyup)="checkTextAndPassKey($event)" maxlength="2"> -
+              <input type="text" id="3" name="" class="form-control text-uppercase d-inline-block col-2" formControlName="regnostr3" (keyup)="checkTextAndPassKey($event)" maxlength="2"> -
+              <input type="text" id="4" name="" class="form-control text-uppercase d-inline-block col-3" formControlName="regnostr4" (keyup)="checkTextAndPassKey($event)" maxlength="4"> 
               <p class="text-danger mt-2 fontsize-14">(Eg. KA-01-HH-1234 or KA-04-TY-3469 )</p>
             </div>
             <div class="col-md-6">
               <label>Color <span class="text-danger">*</span></label>
-              <select formControlName="color" class="form-control">
+              <select formControlName="color" class="form-control" id="5">
                 <option value="">Choose Color</option>
                 <option *ngFor="let opt of color_list" value="{{opt}}">{{opt}}</option>
               </select>
