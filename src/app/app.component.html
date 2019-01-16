@@ -21,7 +21,7 @@
   <div class="my-3">
     <div class=" d-inline-block">
       <p class="mb-1">Total Parking Slots - <span class="text-danger">{{N}}</span></p>
-      <p class="mb-0">Available Parking Slots - <span class="text-danger">{{next_available_slots_arr.length}}</span></p>
+      <p class="mb-0" *ngIf="next_available_slots_arr">Available Parking Slots - <span class="text-danger">{{next_available_slots_arr.length}}</span></p>
     </div>
     <div class="d-inline-block float-right">
       <button type="button" data-target="#parkNewCarModal" data-toggle="modal" class="addCursor btn btn-danger fontsize-14">Park a Car</button>
@@ -39,7 +39,7 @@
         </select>
       </div>
       <div class="d-inline-block ml-2">
-        <button (click)="searchFromArray(getDataFromSession('parkedCarsDetails'),searchForm.value)" class="btn btn-info fontsize-14">Search</button>
+        <button (click)="searchFromArray(getDataFromSession('sessionDataJson')['parkedCarsDetails'],searchForm.value)" class="btn btn-info fontsize-14">Search</button>
       </div>
       <div class="d-inline-block ml-2">
         <button (click)="resetSearch()" class="btn btn-secondary fontsize-14">Reset</button>

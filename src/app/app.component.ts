@@ -32,9 +32,9 @@ export class AppComponent implements OnInit, OnDestroy{
   })
 
   ngOnInit(){
-  	this.N=this.getDataFromSession('total_slots');
-  	this.no_of_parkedcars_details_arr = this.getDataFromSession('parkedCarsDetails');
-  	this.next_available_slots_arr = this.getDataFromSession('availableSlots');
+  	this.N = (this.getDataFromSession('sessionDataJson'))?this.getDataFromSession('sessionDataJson')['total_slots']:null;
+  	this.no_of_parkedcars_details_arr = (this.getDataFromSession('sessionDataJson'))?this.getDataFromSession('sessionDataJson')['parkedCarsDetails']:null;
+  	this.next_available_slots_arr = (this.getDataFromSession('sessionDataJson'))?this.getDataFromSession('sessionDataJson')['availableSlots']:null;
   	if(this.N==null || this.no_of_parkedcars_details_arr==null) {
   		this.hideListOfCars();
 	  } else {
@@ -82,10 +82,12 @@ export class AppComponent implements OnInit, OnDestroy{
 				}
 			}
   	}
-
-  	this.setDataInSession('total_slots',this.N);
-  	this.setDataInSession('parkedCarsDetails',this.no_of_parkedcars_details_arr);
-  	this.setDataInSession('availableSlots',this.next_available_slots_arr);
+  	var obj = {
+  		'total_slots':this.N,
+  		'parkedCarsDetails':this.no_of_parkedcars_details_arr,
+  		'availableSlots':this.next_available_slots_arr
+  	}
+  	this.setDataInSession('sessionDataJson',obj);
   }
 
   showListOfCars(){
@@ -130,6 +132,15 @@ export class AppComponent implements OnInit, OnDestroy{
 		}
 	}
 
+	updateDataInSession(){
+		var obj =  {
+  		'total_slots':this.N,
+  		'parkedCarsDetails':this.no_of_parkedcars_details_arr,
+  		'availableSlots':this.next_available_slots_arr
+  	}
+  	this.setDataInSession('sessionDataJson',obj);
+	}
+
 	removeCarsFromParking(car){
 		for (let n = 0 ; n < this.no_of_parkedcars_details_arr.length ; n++) {
 	    if (this.no_of_parkedcars_details_arr[n].regno == car.regno) {
@@ -139,8 +150,7 @@ export class AppComponent implements OnInit, OnDestroy{
 	      break;
 		  }
 		}
-		this.setDataInSession('parkedCarsDetails',this.no_of_parkedcars_details_arr);
-  	this.setDataInSession('availableSlots',this.next_available_slots_arr);
+		this.updateDataInSession();
 	}
 
 	allotSlotToCar(formvals){
@@ -166,8 +176,7 @@ export class AppComponent implements OnInit, OnDestroy{
 				this.closeModal();
 			}
 		}
-		this.setDataInSession('parkedCarsDetails',this.no_of_parkedcars_details_arr);
-  	this.setDataInSession('availableSlots',this.next_available_slots_arr);
+		this.updateDataInSession();
 	}
 
 	availableSlot(){
@@ -211,13 +220,11 @@ export class AppComponent implements OnInit, OnDestroy{
   		 document.getElementById(""+str).focus();
   	}
   }
+
   resetSearch(){
   	this.searchForm.reset();
   	this.searchForm.controls['color'].setValue("");
-  	this.no_of_parkedcars_details_arr = this.getDataFromSession('parkedCarsDetails');
-  }
-  ngOnDestroy(){
-  	sessionStorage.clear();
+  	this.no_of_parkedcars_details_arr = this.getDataFromSession('sessionDataJson')['parkedCarsDetails'];
   }
 
   validateForm(){
@@ -229,6 +236,10 @@ export class AppComponent implements OnInit, OnDestroy{
         }
     }
     return invalid;
+  }
+
+  ngOnDestroy(){
+  	sessionStorage.clear();
   }
 }
 
