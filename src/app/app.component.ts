@@ -21,10 +21,10 @@ export class AppComponent implements OnInit, OnDestroy{
     color:new FormControl("",Validators.required),
     parking_date:new FormControl(new Date()),
     alloted_slot_no:new FormControl(""),
-    regnostr1 :new FormControl("",[Validators.required,Validators.maxLength(2),Validators.minLength(2)]),
-    regnostr2 :new FormControl("",[Validators.required,Validators.maxLength(2),Validators.minLength(2)]),
-    regnostr3 :new FormControl("",[Validators.required,Validators.maxLength(2),Validators.minLength(2)]),
-    regnostr4 :new FormControl("",[Validators.required,,Validators.maxLength(4),Validators.minLength(4)])
+    regnostr1 :new FormControl("",[Validators.required,Validators.maxLength(2),Validators.minLength(2),Validators.pattern("^[A-Za-z]{2}$")]),
+    regnostr2 :new FormControl("",[Validators.required,Validators.maxLength(2),Validators.minLength(2),Validators.pattern("^[0-9]{2}$")]),
+    regnostr3 :new FormControl("",[Validators.required,Validators.maxLength(2),Validators.minLength(2),Validators.pattern("^[A-Za-z]{2}$")]),
+    regnostr4 :new FormControl("",[Validators.required,,Validators.maxLength(4),Validators.minLength(4),Validators.pattern("^[0-9]{4}$")])
   })
   searchForm:FormGroup =  new FormGroup({
   	regno:new FormControl(""),
@@ -44,15 +44,19 @@ export class AppComponent implements OnInit, OnDestroy{
   }
 
   createParkingLot(){
-  	if(this.N==null || this.no_of_parkedcars_details_arr==null){
-  		this.no_of_parkedcars_details_arr = new Array();
-  		this.next_available_slots_arr = new Array();
-  		for(let i=0;i<this.N;i++){
-  			this.next_available_slots_arr.push(i+1);
-  		}
-  		this.generateInitialCarDetails();
-  	} 
-  	this.showListOfCars();
+  	if(this.N <this.m){
+  		alert('Total no of parked cars can not be more than no of parking slots.');
+  	} else {
+	  		if(this.N==null || this.no_of_parkedcars_details_arr==null){
+	  		this.no_of_parkedcars_details_arr = new Array();
+	  		this.next_available_slots_arr = new Array();
+	  		for(let i=0;i<this.N;i++){
+	  			this.next_available_slots_arr.push(i+1);
+	  		}
+	  		this.generateInitialCarDetails();
+	  	} 
+	  	this.showListOfCars();
+  	}
   }
 
   generateInitialCarDetails(){
@@ -167,7 +171,7 @@ export class AppComponent implements OnInit, OnDestroy{
 	}
 
 	availableSlot(){
-		if(this.no_of_parkedcars_details_arr.length == this.N){
+		if(this.no_of_parkedcars_details_arr && this.no_of_parkedcars_details_arr.length == this.N){
 			return 0;
 		}
 		return (this.next_available_slots_arr && this.next_available_slots_arr.length>0)?Math.min(...this.next_available_slots_arr):1;
