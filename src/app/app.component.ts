@@ -11,6 +11,7 @@ declare var $:any;
 
 export class AppComponent implements OnInit, OnDestroy{
 
+	title='app';
   N;
   m=0;
   no_of_parkedcars_details_arr;
