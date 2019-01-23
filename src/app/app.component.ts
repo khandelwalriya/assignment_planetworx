@@ -344,8 +344,8 @@ export class AppComponent implements OnInit, OnDestroy{
         let todateobj = new Date();
         let fromdateobj = this.calculateBeforeDate(6);
         result = cardataarr.filter(function(car){
-          let dateobj = new Date(car.parking_date).getTime();
-          return (todateobj.getTime() >= dateobj || fromdateobj.getTime()<=dateobj);
+          let dateobj = new Date(car.parking_date);
+          return (todateobj >= dateobj && fromdateobj<=dateobj);
         })
         result.forEach(function(obj){
           total_amount_1 = thisobj.calculateAmount(obj)+ total_amount_1;
@@ -356,8 +356,13 @@ export class AppComponent implements OnInit, OnDestroy{
       case "6":
         let total_amount_2 =0 ;
         result = cardataarr.filter(function(car){
-          let dateobj = new Date(car.parking_date).getTime();
-          return (new Date(thisobj.querymodal_selecteddate_to).getTime() >= dateobj || new Date(thisobj.querymodal_selecteddate_from).getTime()<=dateobj);
+          let dateobj = new Date(car.parking_date);
+          return ((new Date(thisobj.querymodal_selecteddate_to) > dateobj || 
+            ((dateobj.getDate()+'/'+dateobj.getMonth()+'/'+dateobj.getFullYear()) ===
+              new Date(thisobj.querymodal_selecteddate_to).getDate()+'/'+new Date(thisobj.querymodal_selecteddate_to).getMonth()+'/'+new Date(thisobj.querymodal_selecteddate_to).getFullYear() ) )
+            && 
+            (new Date(thisobj.querymodal_selecteddate_from)< dateobj || (dateobj.getDate()+'/'+dateobj.getMonth()+'/'+dateobj.getFullYear()) ===
+              new Date(thisobj.querymodal_selecteddate_from).getDate()+'/'+new Date(thisobj.querymodal_selecteddate_from).getMonth()+'/'+new Date(thisobj.querymodal_selecteddate_from).getFullYear() )   );
         })
         console.log(result);
         result.forEach(function(obj){
