@@ -26,6 +26,9 @@
     <div class="d-inline-block float-right">
       <button type="button" data-target="#parkNewCarModal" data-toggle="modal" class="addCursor btn btn-danger fontsize-14">Park a Car</button>
     </div>
+    <div class="d-inline-block float-right">
+      <button type="button" data-target="#queryDataModal" data-toggle="modal" class="addCursor btn fontsize-14 btn-success mx-2">Query Data</button>
+    </div>
   </div>
   <div class="mt-5 mb-3 text-right">
     <form [formGroup]="searchForm">
@@ -123,6 +126,51 @@
         <p *ngIf="availableSlot()==0" class="text-center">No Parking Available</p>
       </div>
 
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="queryDataModal" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h5 class="modal-title">Query Data</h5>
+        <button type="button" class="close" data-dismiss="modal" (click)="closeQueryModal()">&times;</button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        <select [(ngModel)]="queryQuestionNo" class="form-control my-2" (change)="toggleElements($event.target)">
+          <option value="">Select Question</option>
+          <option value="1">Total no. of cars parked on a particular date?</option>
+          <option value="2">Total amount earned on a day?</option>
+          <option value="3">No. of cars parked of a particular color?</option>
+          <option value="4">No. of cars parked on a particular date of a particular color?</option>
+          <option value="5">Total amount earned in this week?</option>
+          <option value="6">Total amount earned within a range?</option>
+        </select>
+        <ng-container *ngIf="(queryQuestionNo==1 || queryQuestionNo==2 || queryQuestionNo==4)">
+          <input type="date" name="selected_date" [(ngModel)]="querymodal_selecteddate" class="form-control my-2" id="selected_date_query">
+        </ng-container>
+        <ng-container *ngIf="(queryQuestionNo==3 || queryQuestionNo==4)">
+          <select [(ngModel)]="querymodal_selectedcolor" class="form-control my-2" id="querymodal_selectedcolor">
+            <option value="">Choose Color</option>
+            <option *ngFor="let color of color_list">{{color}}</option>
+          </select>
+        </ng-container>
+        <ng-container *ngIf="(queryQuestionNo==6)">
+          <label>From Date</label>
+          <input type="date" name="selected_date" [(ngModel)]="querymodal_selecteddate_from" class="form-control my-2" id="selected_date_query_from">
+        </ng-container>
+        <ng-container *ngIf="(queryQuestionNo==6)">
+          <label>To Date</label>
+          <input type="date" name="selected_date" [(ngModel)]="querymodal_selecteddate_to" class="form-control my-2" id="selected_date_query_to">
+        </ng-container>
+        <button (click)="queryToData()" class="btn btn-info pull-right">Result</button>
+      </div>
+      <h5 class="my-2 mx-2"> {{querymodal_result}}</h5>
     </div>
   </div>
 </div>
