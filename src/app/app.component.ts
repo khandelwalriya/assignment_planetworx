@@ -2,8 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Car } from './Car';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import {DataService} from './data.service';
-declare const require;
-// var data = require('../src/assets/dummy.json');
 declare var $:any;
 
 @Component({
@@ -41,7 +39,6 @@ export class AppComponent implements OnInit, OnDestroy{
   ){}
 
   ngOnInit(){
-    // this.fetchData();
   	this.initializeVariables();
   }
 
@@ -158,15 +155,15 @@ export class AppComponent implements OnInit, OnDestroy{
 	removeCarsFromParking(car){
 		let parking_amount = this.calculateAmount(car);
     alert('Total Parking Amount = '+parking_amount);
-		// for (let n = 0 ; n < this.no_of_parkedcars_details_arr.length ; n++) {
-	 //    if (this.no_of_parkedcars_details_arr[n].regno == car.regno) {
-	 //    	this.next_available_slots_arr.push(car.alloted_slot_no);
-	 //      var removedObject = this.no_of_parkedcars_details_arr.splice(n,1);
-	 //      removedObject = null;
-	 //      break;
-		//   }
-		// }
-		// this.updateDataInSession();
+		for (let n = 0 ; n < this.no_of_parkedcars_details_arr.length ; n++) {
+	    if (this.no_of_parkedcars_details_arr[n].regno == car.regno) {
+	    	this.next_available_slots_arr.push(car.alloted_slot_no);
+	      var removedObject = this.no_of_parkedcars_details_arr.splice(n,1);
+	      removedObject = null;
+	      break;
+		  }
+		}
+		this.updateDataInSession();
 	}
 
 	allotSlotToCar(formvals){
@@ -268,8 +265,9 @@ export class AppComponent implements OnInit, OnDestroy{
     let diff =(dt2.getTime() - dt1.getTime()) ;
     //let hours = Math.floor(diff / (1000 * 60 * 60));
     let mins = Math.floor(diff / (1000 * 60));
-    //console.log('mins='+mins);
+    console.log('mins='+mins);
     var noofhours = (mins/60>1)?(mins/60):0;
+    console.log(noofhours);
     if(Math.trunc(noofhours)<=1){
     	carobj.amount = 20;
     	if(noofhours%24){
@@ -277,14 +275,20 @@ export class AppComponent implements OnInit, OnDestroy{
     	}
     }
     if(Math.trunc(noofhours)>1){
+      let hours = Math.trunc(noofhours)-1;
       carobj.amount = 20;
+      while(hours>0){
+        carobj.amount =carobj.amount+10;
+        hours--;
+      }
       if(noofhours%24){
         carobj.amount =carobj.amount+10;
       }
-      noofhours = Math.trunc(noofhours)-1;
+      //noofhours = Math.trunc(noofhours)-1;
     	carobj.amount =carobj.amount+Math.trunc(noofhours/24)*200;
     	
     }
+    console.log(carobj.amount);
     return carobj.amount;
 
     
@@ -297,7 +301,7 @@ export class AppComponent implements OnInit, OnDestroy{
   querymodal_selecteddate_from;
   querymodal_selecteddate_to;
   queryToData(){
-    let cardataarr = this.getDataFromSession('sessionDataJson')['parkedCarsDetails'];
+    let cardataarr = this.querydata_arr;
     let result;
     var thisobj= this;
     let dateobj1:any = new Date(thisobj.querymodal_selecteddate).getDate()+'/'+new Date(thisobj.querymodal_selecteddate).getMonth()+'/'+new Date(thisobj.querymodal_selecteddate).getFullYear();
@@ -325,7 +329,7 @@ export class AppComponent implements OnInit, OnDestroy{
 
       case "3":
         result = cardataarr.filter(function(car){
-          return (car.color== thisobj.querymodal_selectedcolor);
+          return (car.color.toLowerCase()== thisobj.querymodal_selectedcolor.toLowerCase());
         })
         this.querymodal_result = 'Resulted No. of records = ' + result.length;
         break;
@@ -334,7 +338,7 @@ export class AppComponent implements OnInit, OnDestroy{
         result = cardataarr.filter(function(car){
            let dateobj2 = new Date(car.parking_date).getDate()+'/'+new Date(car.parking_date).getMonth()+'/'+new Date(car.parking_date).getFullYear();
           return (dateobj1==dateobj2
-            && car.color== thisobj.querymodal_selectedcolor);
+            && car.color.toLowerCase()== thisobj.querymodal_selectedcolor.toLowerCase());
         })
         this.querymodal_result = 'Resulted No. of records = ' + result.length;
         break;
@@ -364,7 +368,6 @@ export class AppComponent implements OnInit, OnDestroy{
             (new Date(thisobj.querymodal_selecteddate_from)< dateobj || (dateobj.getDate()+'/'+dateobj.getMonth()+'/'+dateobj.getFullYear()) ===
               new Date(thisobj.querymodal_selecteddate_from).getDate()+'/'+new Date(thisobj.querymodal_selecteddate_from).getMonth()+'/'+new Date(thisobj.querymodal_selecteddate_from).getFullYear() )   );
         })
-        console.log(result);
         result.forEach(function(obj){
           total_amount_2 = thisobj.calculateAmount(obj)+ total_amount_2;
         })
@@ -386,7 +389,6 @@ export class AppComponent implements OnInit, OnDestroy{
   }
 
   toggleElements(targetElem){
-    console.log(targetElem.value);
     if(targetElem.value==1 || targetElem.value==2){
       this.querymodal_selectedcolor ="";
     } else if(targetElem.value == 3){
@@ -403,9 +405,18 @@ export class AppComponent implements OnInit, OnDestroy{
     this.querymodal_selecteddate_from = undefined;
     this.querymodal_selecteddate_to  = undefined;
   }
-  // fetchData(){
-  //   console.log(JSON.stringify(data));
-  // }
+
+  querydata_arr;
+  fetchData(){
+     this.dataserv.fetchJsonData().subscribe(
+      res=>{
+        this.querydata_arr = res;
+      }, 
+      err=>{
+        console.log(err);
+      }
+    );
+  }
 
   // postDataToJson(data){
   //   this.dataserv.postDataToJson(data).subscribe(

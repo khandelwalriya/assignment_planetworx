@@ -12,7 +12,7 @@ export class DataService {
   ) { }
 
   private extractData(res:Response){
-    return res;
+    return res.json();
   }
 
   private handleErrorObservable (error: Response | any) {
@@ -20,12 +20,12 @@ export class DataService {
   }
 
   fetchJsonData() {    
-  	return this.http.get('Users/riyakhandelwal/Angular2Test/assignment-planetworx/src/appcarsdetails.json')
+  	return this.http.get('assets/dummy.json')
           .map(this.extractData)
           .catch(this.handleErrorObservable);
   }
   postDataToJson(data){
-  	return this.http.post('./carsdetails.json',data)
+  	return this.http.post('assets/dummy.json',data)
           .map(this.extractData)
           .catch(this.handleErrorObservable);
   }
